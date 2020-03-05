@@ -1,8 +1,20 @@
 <!DOCTYPE html>
 <html lang="de">
     <head>
-        <title>Webengineering Projekt</title>
-        <link rel="stylesheet" href="style.css" />
         <meta charset="utf-8">
+        <title>Webengineering Projekt</title>
+        <link rel="stylesheet" href="normalise.css" />
+        <link rel="stylesheet" href="style.css" />
     </head>
+    <body>
+        <h1>Books:</h1>
+        <label>
+            Suche:
+            <input id="searchText" type="search" />
+          </label>
+        <button id="run">Starten</button>
+        <div id="output">-Output-</div>
+
+        <script src="googleBooksAPITest.js"></script>
+    </body>
 </html>
