@@ -33,9 +33,9 @@ document.addEventListener('DOMContentLoaded', function(){
         image.setAttribute("src", val.volumeInfo.imageLinks.thumbnail);
         image.setAttribute("alt", val.volumeInfo.title);
         image.setAttribute("title", val.volumeInfo.title);
-        image.setAttribute("id", val.id);
+        container.setAttribute("div", val.id);
         image.onclick = function() {
-          let book = resultMap.get(this.id);
+          let book = resultMap.get(this.parent.id);
           console.log(book);
         };
         container.appendChild(image);
