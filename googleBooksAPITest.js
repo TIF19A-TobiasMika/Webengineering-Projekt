@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function(){
         container.setAttribute("class", "container");
         let favoriteButton = document.createElement("BUTTON");
         favoriteButton.setAttribute("class", "wishlistBtn")
+        favoriteButton.innerHTML= "\u2606";
         let image = document.createElement("IMG");
         image.setAttribute("src", val.volumeInfo.imageLinks.thumbnail);
         image.setAttribute("alt", val.volumeInfo.title);
