@@ -16,7 +16,10 @@ document.addEventListener('DOMContentLoaded', function(){
       let output = document.getElementById('output');
       output.innerHTML = "";
       json.items.forEach(function(val) {
-        let anchor = document.createElement("A");
+        let container = document.createElement("DIV");
+        container.setAttribute("class", "container");
+        let favoriteButton = document.createElement("BUTTON");
+        favoriteButton.setAttribute("class", "wishlistBtn")
         let image = document.createElement("IMG");
         image.setAttribute("src", val.volumeInfo.imageLinks.thumbnail);
         image.setAttribute("alt", val.volumeInfo.title);
@@ -24,7 +27,9 @@ document.addEventListener('DOMContentLoaded', function(){
         image.onclick = function() {
           alert(this.title);
         };
-        output.appendChild(image);
+        container.appendChild(image);
+        container.appendChild(favoriteButton);
+        output.appendChild(container);
       });
       //console.log(output);
   }
