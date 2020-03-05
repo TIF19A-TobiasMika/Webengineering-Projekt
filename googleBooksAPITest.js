@@ -16,10 +16,17 @@ document.addEventListener('DOMContentLoaded', function(){
       let output = document.getElementById('output');
       output.innerHTML = "";
       json.items.forEach(function(val) {
+        let container = document.createElement("DIV");
+        container.setAttribute("class", "container");
+        let imageButton = document.createElement("BUTTON");
+        let favoriteButton = document.createElement("BUTTON");
+        favoriteButton.setAttribute("class", "wishlistBtn")
         let image = document.createElement("IMG");
         image.setAttribute("src", val.volumeInfo.imageLinks.thumbnail);
         image.setAttribute("alt", val.volumeInfo.title);
-        output.appendChild(image);
+        container.appendChild(image);
+        container.appendChild(favoriteButton);
+        output.appendChild(container);
       });
       //console.log(output);
   }
