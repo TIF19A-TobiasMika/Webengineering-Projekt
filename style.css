@@ -13,3 +13,8 @@ body {
     border-style: solid;
     border-color: silver;
 }
+
+#output img:hover{
+    cursor: pointer;
+    border-color: gray;
+}

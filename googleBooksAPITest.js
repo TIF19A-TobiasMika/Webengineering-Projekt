@@ -16,9 +16,14 @@ document.addEventListener('DOMContentLoaded', function(){
       let output = document.getElementById('output');
       output.innerHTML = "";
       json.items.forEach(function(val) {
+        let anchor = document.createElement("A");
         let image = document.createElement("IMG");
         image.setAttribute("src", val.volumeInfo.imageLinks.thumbnail);
         image.setAttribute("alt", val.volumeInfo.title);
+        image.setAttribute("title", val.volumeInfo.title);
+        image.onclick = function() {
+          alert(this.title);
+        };
         output.appendChild(image);
       });
       //console.log(output);
