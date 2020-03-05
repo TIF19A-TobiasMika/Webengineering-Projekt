@@ -11,15 +11,23 @@
             <img src="http://books.google.com/books/content?id=obNJLgEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api" alt="Test">
             <button id="popupCloseButton">X</button>
         </div>
-        <h1>Books:</h1>
 
-        <label>
-            Suche:
-            <input id="searchText" type="search" placeholder="book title"/>
-        </label>
-        <button id="run">Starten</button>
+        <div id="header">
+            <h1>Books:</h1>
 
-        <div id="output">-Output-</div>
+            <label>
+                Suche:
+                <input id="searchText" type="search" placeholder="book title"/>
+            </label>
+            <button id="run">Starten</button>
+            <label for="authors">
+                Autoren-Filter:
+                <select id="authors"></select>
+            </label>
+            <button id="showWishListBtn">Favoriten</button>
+        </div>
+
+        <div id="output"></div>
 
         <script src="googleBooksAPITest.js"></script>
     </body>

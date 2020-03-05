@@ -104,3 +104,13 @@ body {
     cursor: pointer;
     border-color: gray;
 }
+
+label {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+#header {
+    padding-bottom: 20px;
+}
