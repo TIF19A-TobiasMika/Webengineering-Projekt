@@ -1,3 +1,11 @@
+let resultMap = new Map();
+
+function Book(title, authors, description) {
+  this.title = title;
+  this.authors = authors;
+  this.description = description;
+}
+
 document.addEventListener('DOMContentLoaded', function(){
     document.getElementById('run').onclick = async function(){
       let searchText = document.getElementById("searchText").value;
@@ -24,12 +32,15 @@ document.addEventListener('DOMContentLoaded', function(){
         image.setAttribute("src", val.volumeInfo.imageLinks.thumbnail);
         image.setAttribute("alt", val.volumeInfo.title);
         image.setAttribute("title", val.volumeInfo.title);
+        image.setAttribute("id", val.id);
         image.onclick = function() {
-          alert(this.title);
+          let book = resultMap.get(this.id);
+          console.log(book);
         };
         container.appendChild(image);
         container.appendChild(favoriteButton);
         output.appendChild(container);
+        resultMap.set(val.id, new Book(val.volumeInfo.title, val.volumeInfo.authors, val.volumeInfo.description));
       });
       //console.log(output);
   }
