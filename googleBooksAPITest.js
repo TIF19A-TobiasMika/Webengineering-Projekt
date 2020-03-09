@@ -7,7 +7,17 @@ function Book(title, authors, description) {
 }
 
 async function getImages(searchText) {
-  const fetchRequest = `https://www.googleapis.com/books/v1/volumes?q=${searchText}&printType=books&maxResults=30&projection=lite&key=AIzaSyCg0v6ii17dHIn0ZfQMIfMD0qshWRuFio0`;
+  let authorChoice = document.getElementById("authors");
+  let authorFilter = authorChoice.selectedIndex === -1 ? "none" : authorChoice.options[authorChoice.selectedIndex].value;
+  let fetchRequest = "";
+  if(authorFilter === "none")
+  {
+    fetchRequest = `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchText}&printType=books&maxResults=30&projection=lite&key=AIzaSyCg0v6ii17dHIn0ZfQMIfMD0qshWRuFio0`;
+  }
+  else
+  {
+    fetchRequest = `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchText}+inauthor:${authorFilter}&printType=books&maxResults=30&projection=lite&key=AIzaSyCg0v6ii17dHIn0ZfQMIfMD0qshWRuFio0`;
+  }
   console.log(fetchRequest);
   const fetchResult = await fetch(fetchRequest);
   let json = await fetchResult.json();
@@ -15,8 +25,11 @@ async function getImages(searchText) {
   //console.log(fullJson);
   let output = document.getElementById('output');
   output.innerHTML = "";
-  let authorChoice = document.getElementById("authors");
   authorChoice.innerHTML = "";
+  let defaultOpt = document.createElement("option");
+    defaultOpt.text = "Egal";
+    defaultOpt.value = "none";
+    authorChoice.appendChild(defaultOpt);
   json.items.forEach(function(val) {
     let container = document.createElement("DIV");
     container.setAttribute("class", "container");
@@ -38,6 +51,7 @@ async function getImages(searchText) {
     container.appendChild(favoriteButton);
     output.appendChild(container);
     resultMap.set(val.id, new Book(val.volumeInfo.title, val.volumeInfo.authors, val.volumeInfo.description));
+    console.log(val.volumeInfo.authors);
     val.volumeInfo.authors.forEach(function(author)
     {
       let opt = document.createElement("option");
