@@ -139,11 +139,14 @@ function createOutput() {
 
 function GenerateAuthorList(book){
   let authorList = document.createElement("p");
-  for (let i = 0; i < book.authors.length; i++) 
+  if(book.authors !== undefined)
   {
-    let listItem = document.createElement('p');
-    listItem.textContent = book.authors[i];
-    authorList.appendChild(listItem);
+    for (let i = 0; i < book.authors.length; i++) 
+    {
+      let listItem = document.createElement('p');
+      listItem.textContent = book.authors[i];
+      authorList.appendChild(listItem);
+    }
   }
   return authorList;
 }
