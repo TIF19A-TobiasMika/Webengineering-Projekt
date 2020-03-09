@@ -8,19 +8,23 @@
     </head>
     <body>
         <div class="popup" id="popup">
-            <img id="popupImage"></img>
-            <h2 id="popupTitel">Titel</h2>
-            <p id="popupAuthors">Autoren</p>
-            <p id="popupDescription">Beschreibung</p>
-            <button id="popupCloseButton">X</button>
+            <div class="flex-container">
+                <h2 id="popupTitel">Titel</h2>
+                <img id="popupImage"></img>
+                <h3>Autoren</h3>
+                <p id="popupAuthors">Autoren</p>
+                <h3>Beschreibung</h3>
+                <p id="popupDescription">Beschreibung</p>
+                <button id="popupCloseButton">X</button>
+            </div>
         </div>
 
     <div id="header">
-      <h1>Books:</h1>
+      <h1>Bücher:</h1>
 
       <label>
         Suche:
-        <input id="searchText" type="search" placeholder="book title" />
+        <input id="searchText" type="search" placeholder="Buchtitel" />
       </label>
       <button id="run">Starten</button>
       <label for="authors">
