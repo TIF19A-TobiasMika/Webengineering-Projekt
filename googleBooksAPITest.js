@@ -125,11 +125,9 @@ function createOutput() {
       document.getElementById("popupTitel").innerText = b.title;
       let authorPopUpList = document.getElementById("popupAuthors");
       authorPopUpList.innerHTML = "";
-      authorPopUpList.textContent = "Autoren:";
       authorPopUpList.appendChild(GenerateAuthorList(b));
       let descriptionPopUpList = document.getElementById("popupDescription")
       descriptionPopUpList.innerHTML = "";
-      descriptionPopUpList.textContent = "Beschreibung:"
       descriptionPopUpList.appendChild(GenerateDescription(b));
       document.getElementById("popup").classList.add("fadeIn");
     };
@@ -140,11 +138,11 @@ function createOutput() {
 }
 
 function GenerateAuthorList(book){
-  let authorList = document.createElement("ul");
+  let authorList = document.createElement("p");
   for (let i = 0; i < book.authors.length; i++) 
   {
-    let listItem = document.createElement('li');
-    listItem.appendChild(document.createTextNode(book.authors[i]));
+    let listItem = document.createElement('p');
+    listItem.textContent = book.authors[i];
     authorList.appendChild(listItem);
   }
   return authorList;
