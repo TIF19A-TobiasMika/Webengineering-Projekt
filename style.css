@@ -4,17 +4,18 @@ body {
 }
 
 .popup {
-    visibility: hidden;
     position: absolute;
     background: lightgray;
-    opacity: 98%;
+    opacity: 0%;
     width: 80vw;
     height: 80vh;
     left: 10vw;
     top: 10vh;
-    z-index: 1;
     border-radius: 16px;
     border-style: solid;
+    z-index: 1;
+    visibility: hidden;
+    transition: opacity 1s;
 }
 
 .popup button {
@@ -36,31 +37,9 @@ body {
     margin: 10px;
 }
 
-.hidden {
+.fadeIn {
     visibility: visible;
-    animation: fadeOut 1s;
-}
-
-.show {
-    visibility: visible;
-    -webkit-animation: fadeIn 1s;
-    animation: fadeIn 1s
-  }
-  
-  /* Add animation (fade in the popup) */
-  @-webkit-keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity: 1;}
-  }
-
-  @keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity: 1;}
-  }
-  
-  @keyframes fadeOut {
-    from {opacity: 1;}
-    to {opacity: 0;}
+    opacity: 0.98;
   }
 
 .container {

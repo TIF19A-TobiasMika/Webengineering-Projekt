@@ -25,11 +25,12 @@ async function getImages(searchText) {
     image.setAttribute("src", val.volumeInfo.imageLinks.thumbnail);
     image.setAttribute("alt", val.volumeInfo.title);
     image.setAttribute("title", val.volumeInfo.title);
+    let authors = new Set()
     container.setAttribute("id", val.id);
     image.onclick = function() {
-      let book = resultMap.get(this.parent.id);
+      let book = resultMap.get(this.parentElement.id);
       console.log(book);
-      document.getElementById("popup").classList.toggle("show");
+      document.getElementById("popup").classList.add("fadeIn");
     };
     container.appendChild(image);
     container.appendChild(favoriteButton);
@@ -48,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     document.getElementById("popupCloseButton").onclick = function() {
       console.log("Close Popup");
-      document.getElementById("popup").classList.toggle("show");
+      document.getElementById("popup").classList.remove("fadeIn");
     };
 
 });
