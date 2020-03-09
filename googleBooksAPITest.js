@@ -11,8 +11,17 @@ function Book(title, authors, description, thumbnail) {
 async function searchFor(searchText) {
   resultMap = new Map();
   allAuthors = new Set();
-  const fetchRequest = `https://www.googleapis.com/books/v1/volumes?q=${searchText}&printType=books&maxResults=30&projection=lite&key=AIzaSyCg0v6ii17dHIn0ZfQMIfMD0qshWRuFio0`;
-  //console.log(fetchRequest);
+  let authorChoice = document.getElementById("authors");
+  let authorFilter = authorChoice.selectedIndex === -1 ? "none" : authorChoice.options[authorChoice.selectedIndex].value;
+  let fetchRequest = "";
+  if(authorFilter === "none")
+  {
+    fetchRequest = `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchText}&printType=books&maxResults=30&projection=lite&key=AIzaSyCg0v6ii17dHIn0ZfQMIfMD0qshWRuFio0`;
+  }
+  else
+  {
+    fetchRequest = `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchText}+inauthor:${authorFilter}&printType=books&maxResults=30&projection=lite&key=AIzaSyCg0v6ii17dHIn0ZfQMIfMD0qshWRuFio0`;
+  }
   const fetchResult = await fetch(fetchRequest);
   let json = await fetchResult.json();
   //let fullJson = JSON.stringify(json);
@@ -33,6 +42,22 @@ async function searchFor(searchText) {
     }
   });
   createOutput();
+  createAuthorChoice();
+}
+
+function createAuthorChoice() {
+  let authorChoice = document.getElementById("authors");
+  authorChoice.innerHTML = "";
+  let defaultOpt = document.createElement("option");
+    defaultOpt.text = "Egal";
+    defaultOpt.value = "none";
+    authorChoice.appendChild(defaultOpt);
+  allAuthors.forEach(function(author) {
+    let opt = document.createElement("option");
+      opt.text= author;
+      opt.value = author;
+      authorChoice.appendChild(opt);
+  });
 }
 
 function createOutput() {
@@ -51,27 +76,17 @@ function createOutput() {
     image.setAttribute("title", book.title);
     container.setAttribute("id", key);
     image.onclick = function() {
-      console.log(this.parentElement.id);
-      let book2 = resultMap.get(this.parentElement.id);
-      console.log(book2);
-      document.getElementById("popupImage").setAttribute("src", book2.thumbnail);
-      document.getElementById("popupImage").setAttribute("alt", book2.title);
-      document.getElementById("popupTitel").innerText = book2.title;
+      let b = resultMap.get(this.parentElement.id);
+      console.log(b);
+       document.getElementById("popupImage").setAttribute("src", b.thumbnail);
+      document.getElementById("popupImage").setAttribute("alt", b.title);
+      document.getElementById("popupTitel").innerText = b.title;
       document.getElementById("popup").classList.add("fadeIn");
     };
     container.appendChild(image);
     container.appendChild(favoriteButton);
     output.appendChild(container);
-  }
-  let authorChoice = document.getElementById("authors");
-  authorChoice.innerHTML = "";
-  allAuthors.forEach(function(author)
-  {
-    let opt = document.createElement("option");
-    opt.text= author;
-    opt.value = author;
-    authorChoice.appendChild(opt);
-  });
+  };
 }
 
 document.addEventListener('DOMContentLoaded', function(){
