@@ -1,5 +1,6 @@
 let resultMap = new Map();
 let allAuthors = new Set();
+let apiKey = "AIzaSyCg0v6ii17dHIn0ZfQMIfMD0qshWRuFio0"
 
 function Book(title, authors, description, thumbnail) {
   this.title = title;
@@ -9,8 +10,8 @@ function Book(title, authors, description, thumbnail) {
 }
 
 async function searchFor(searchText) {
-  resultMap = new Map();
-  allAuthors = new Set();
+  resultMap.clear();
+  allAuthors.clear();
   let authorChoice = document.getElementById("authors");
   let authorFilter =
     authorChoice.selectedIndex === -1
@@ -18,37 +19,37 @@ async function searchFor(searchText) {
       : authorChoice.options[authorChoice.selectedIndex].value;
   let fetchRequest = "";
   if (authorFilter === "none") {
-    fetchRequest = `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchText}&printType=books&maxResults=30&projection=lite&key=AIzaSyCg0v6ii17dHIn0ZfQMIfMD0qshWRuFio0`;
+    fetchRequest = `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchText}&printType=books&maxResults=30&projection=lite&key=${apiKey}`;
   } else {
-    fetchRequest = `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchText}+inauthor:${authorFilter}&printType=books&maxResults=30&projection=lite&key=AIzaSyCg0v6ii17dHIn0ZfQMIfMD0qshWRuFio0`;
+    fetchRequest = `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchText}+inauthor:${authorFilter}&printType=books&maxResults=30&projection=lite&key=${apiKey}`;
   }
   const fetchResult = await fetch(fetchRequest);
   let json = await fetchResult.json();
-  //let fullJson = JSON.stringify(json);
-  //console.log(fullJson);
-  json.items.forEach(function(val) {
-    let title,
-      authors,
-      description,
-      thumbnail = null;
-    if (val.volumeInfo != undefined) {
-      if (
-        val.volumeInfo.imageLinks != undefined &&
-        val.volumeInfo.imageLinks.thumbnail != undefined
-      ) {
-        thumbnail = val.volumeInfo.imageLinks.thumbnail;
-        if (val.volumeInfo.authors != undefined) {
-          authors = val.volumeInfo.authors;
-          authors.forEach(a => allAuthors.add(a));
-        }
-        title = val.volumeInfo.title;
-        description = val.volumeInfo.description;
-        resultMap.set(val.id, new Book(title, authors, description, thumbnail));
-      }
-    }
-  });
+  json.items.forEach(parseVolume);
   createOutput();
   createAuthorChoice();
+}
+
+function parseVolume(val) {
+  let title,
+    authors,
+    description,
+    thumbnail = null;
+  if (val.volumeInfo != undefined) {
+    if (
+      val.volumeInfo.imageLinks != undefined &&
+      val.volumeInfo.imageLinks.thumbnail != undefined
+    ) {
+      thumbnail = val.volumeInfo.imageLinks.thumbnail;
+      if (val.volumeInfo.authors != undefined) {
+        authors = val.volumeInfo.authors;
+        authors.forEach(a => allAuthors.add(a));
+      }
+      title = val.volumeInfo.title;
+      description = val.volumeInfo.description;
+      resultMap.set(val.id, new Book(title, authors, description, thumbnail));
+    }
+  }
 }
 
 function createAuthorChoice() {
@@ -90,6 +91,7 @@ function getFavorites() {
 }
 
 function createOutput() {
+  console.log("creating Output");
   let output = document.getElementById("output");
   output.innerHTML = "";
   let favorites = getFavorites();
@@ -174,6 +176,25 @@ document.addEventListener('DOMContentLoaded', function(){
       console.log("Close Popup");
       document.getElementById("popup").classList.remove("fadeIn");
     };
+
+    document.getElementById('showWishListBtn').onclick = async function() {
+      let favorites = getFavorites();
+      if(favorites.length <= 0) {
+        alert("Noch keine Favorieten gespeichert");
+      } else {
+        resultMap.clear();
+        allAuthors.clear();
+        await Promise.all(favorites.map(async function(fav) {
+          const fetchResult = await fetch(`https://www.googleapis.com/books/v1/volumes/${fav}?key=${apiKey}`);
+          let json = await fetchResult.json();
+          parseVolume(json);
+        }));
+        createAuthorChoice();
+        createOutput();
+      }
+    };
+
+
 
   document.getElementById("popupCloseButton").onclick = function() {
     console.log("Close Popup");
