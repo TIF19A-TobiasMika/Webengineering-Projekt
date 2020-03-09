@@ -15,6 +15,8 @@ async function getImages(searchText) {
   //console.log(fullJson);
   let output = document.getElementById('output');
   output.innerHTML = "";
+  let authorChoice = document.getElementById("authors");
+  authorChoice.innerHTML = "";
   json.items.forEach(function(val) {
     let container = document.createElement("DIV");
     container.setAttribute("class", "container");
@@ -36,6 +38,13 @@ async function getImages(searchText) {
     container.appendChild(favoriteButton);
     output.appendChild(container);
     resultMap.set(val.id, new Book(val.volumeInfo.title, val.volumeInfo.authors, val.volumeInfo.description));
+    val.volumeInfo.authors.forEach(function(author)
+    {
+      let opt = document.createElement("option");
+      opt.text= author;
+      opt.value = author;
+      authorChoice.appendChild(opt);
+    });
   });
 }
 
