@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function(){
     document.getElementById('showWishListBtn').onclick = async function() {
       let favorites = getFavorites();
       if(favorites.length <= 0) {
-        alert("Noch keine Favorieten gespeichert");
+        alert("Noch keine Favoriten gespeichert");
       } else {
         resultMap.clear();
         allAuthors.clear();
