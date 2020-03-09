@@ -78,15 +78,46 @@ function createOutput() {
     image.onclick = function() {
       let b = resultMap.get(this.parentElement.id);
       console.log(b);
-       document.getElementById("popupImage").setAttribute("src", b.thumbnail);
+      document.getElementById("popupImage").setAttribute("src", b.thumbnail);
       document.getElementById("popupImage").setAttribute("alt", b.title);
       document.getElementById("popupTitel").innerText = b.title;
+      let authorPopUpList = document.getElementById("popupAuthors");
+      authorPopUpList.innerHTML = "";
+      authorPopUpList.textContent = "Autoren:";
+      authorPopUpList.appendChild(GenerateAuthorList(b));
+      let descriptionPopUpList = document.getElementById("popupDescription")
+      descriptionPopUpList.innerHTML = "";
+      descriptionPopUpList.textContent = "Beschreibung:"
+      descriptionPopUpList.appendChild(GenerateDescription(b));
       document.getElementById("popup").classList.add("fadeIn");
     };
     container.appendChild(image);
     container.appendChild(favoriteButton);
     output.appendChild(container);
   };
+}
+
+function GenerateAuthorList(book){
+  let authorList = document.createElement("ul");
+  for (let i = 0; i < book.authors.length; i++) 
+  {
+    let listItem = document.createElement('li');
+    listItem.appendChild(document.createTextNode(book.authors[i]));
+    authorList.appendChild(listItem);
+  }
+  return authorList;
+}
+
+function GenerateDescription(book)
+{
+  let description = document.createElement("p");
+  description.setAttribute("class", "popUpDescriptionText");
+
+  if(book.description !== undefined)
+  {
+    description.textContent = book.description;
+  }
+  return description;
 }
 
 document.addEventListener('DOMContentLoaded', function(){
