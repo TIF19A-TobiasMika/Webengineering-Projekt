@@ -49,27 +49,63 @@ function createAuthorChoice() {
   let authorChoice = document.getElementById("authors");
   authorChoice.innerHTML = "";
   let defaultOpt = document.createElement("option");
-    defaultOpt.text = "Egal";
-    defaultOpt.value = "none";
-    authorChoice.appendChild(defaultOpt);
+  defaultOpt.text = "Egal";
+  defaultOpt.value = "none";
+  authorChoice.appendChild(defaultOpt);
   allAuthors.forEach(function(author) {
-    let opt = document.createElement("option");
-      opt.text= author;
-      opt.value = author;
-      authorChoice.appendChild(opt);
+  let opt = document.createElement("option");
+    opt.text= author;
+    opt.value = author;
+    authorChoice.appendChild(opt);
   });
+}
+
+function removeFavorite(id) {
+  let favorites = getFavorites();
+  //console.log(typeof favorites);
+  favorites = favorites.filter(item => item !== id)
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+}
+
+function addFavorite(id) {
+  let favorites = getFavorites();
+  if(!favorites.includes(id)) {
+    favorites.push(id);
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }
+}
+
+function getFavorites() {
+  if(localStorage.getItem("favorites") != null) {
+    return JSON.parse(localStorage.getItem("favorites"));
+  } else {
+    return [];
+  }
 }
 
 function createOutput() {
   let output = document.getElementById("output");
   output.innerHTML = "";
+  let favorites = getFavorites();
   for (let key of resultMap.keys()) {
     let book = resultMap.get(key);
     let container = document.createElement("DIV");
     container.setAttribute("class", "container");
     let favoriteButton = document.createElement("BUTTON");
     favoriteButton.setAttribute("class", "wishlistBtn")
+    if(favorites.includes(key)) {
+      favoriteButton.classList.add("checked");
+    }
     favoriteButton.innerHTML= "\u2606";
+    favoriteButton.onclick = function() {
+      if(favoriteButton.classList.contains("checked")) {
+        favoriteButton.classList.remove("checked");
+        removeFavorite(this.parentElement.id);
+      } else {
+        favoriteButton.classList.add("checked");
+        addFavorite(this.parentElement.id);
+      }
+    }
     let image = document.createElement("IMG");
     image.setAttribute("src", book.thumbnail);
     image.setAttribute("alt", book.title);

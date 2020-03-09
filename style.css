@@ -75,6 +75,10 @@ body {
     text-align: center;
 }
 
+.wishlistBtn.checked{
+    color: gold;
+}
+
 .wishlistBtn:hover{
     background-color: darkblue;
 }
