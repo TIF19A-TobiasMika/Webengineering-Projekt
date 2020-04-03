@@ -25,12 +25,19 @@ async function searchFor(searchText) {
     authorChoice.selectedIndex === -1
       ? "none"
       : authorChoice.options[authorChoice.selectedIndex].value;
+  //Type Filter
+  let type = document.getElementById("type").value;
+  let orderBy = document.getElementById("sort").checked ? "newest" : "relevance";
   let fetchRequest = "";
-  if (authorFilter === "none") {
-    fetchRequest = `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchText}&printType=books&maxResults=30&projection=lite&key=${apiKey}`;
-  } else {
-    fetchRequest = `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchText}+inauthor:${authorFilter}&printType=books&maxResults=30&projection=lite&key=${apiKey}`;
+  if(document.getElementById("inTitle").checked) {
+    searchText = `intitle:${searchText}`;
   }
+  if (authorFilter === "none") {
+    fetchRequest = `https://www.googleapis.com/books/v1/volumes?q=${searchText}&printType=${type}&orderBy=${orderBy}&maxResults=30&projection=lite&key=${apiKey}`;
+  } else {
+    fetchRequest = `https://www.googleapis.com/books/v1/volumes?q=${searchText}+inauthor:${authorFilter}&printType=${type}&orderBy=${orderBy}&maxResults=30&projection=lite&key=${apiKey}`;
+  }
+  console.log(fetchRequest);
   //Eigentliche API Abfrage
   const fetchResult = await fetch(fetchRequest);
   let json = await fetchResult.json();
@@ -43,7 +50,8 @@ async function searchFor(searchText) {
     createAuthorChoice();
   } else {
     //Kam kein Ergebniss zurück wird dies angezeigt und der Filter versteckt
-    outputLabel.innerText = `Kein Treffer für "${searchText}" gefunden`;
+    outputLabel.innerHTML = "Kein Treffer gefunden";
+    console.log(`Kein Treffer gefunden für ${searchText} Filter: printType=${type}, author:${authorFilter}, orderBy=${orderBy}`);
     outputLabel.classList.add("visible");
     document.getElementById("authorFilter").classList.remove("visible");
     document.getElementById("output").innerHTML = "";
@@ -199,6 +207,7 @@ function GenerateDescription(book) {
 //Lädt die Favorieten aus der API und zeigt sie an
 async function loadFavorites() {
   console.log("Lade Favoriten...");
+  document.getElementById("filter").classList.remove("visible");
   document.getElementById("authorFilter").classList.remove("visible");
   let favorites = getFavorites();
   let outputLabel = document.getElementById("outputLabel");
@@ -224,10 +233,21 @@ async function loadFavorites() {
 }
 
 async function runSearch() {
+  document.getElementById("filter").classList.add("visible");
   let searchText = document.getElementById("searchText").value;
   searchText = searchText.replace(/ /g, "+");
   await searchFor(searchText);
   console.log("searched for " + searchText);
+}
+
+async function filterChange() {
+  let authorChoice = document.getElementById("authors");
+  let slectedAuthor = authorChoice.value;
+  await runSearch();
+  //Sorgt dafür das der Author weiterhin ausgewählt bleibt
+  document.querySelector(
+    '#authors [value="' + slectedAuthor + '"]'
+  ).selected = true;
 }
 
 //Setzt die Funktionen für die Eventlisteners und lädt die Favoriten falls vorhanden.
@@ -237,22 +257,32 @@ document.addEventListener("DOMContentLoaded", function() {
 
   document.getElementById("searchText").onsearch = runSearch;
 
+  document.getElementById("searchText").onchange = function() {
+    let authorChoice = document.getElementById("authors").selectedIndex = 0;
+  }
+
   document.getElementById("showWishListBtn").onclick = loadFavorites;
 
-  document.getElementById("authors").onchange = async function() {
-    let authorChoice = document.getElementById("authors");
-    let slectedAuthor = authorChoice.value;
-    await runSearch();
-    //Sorgt dafür das der Author weiterhin ausgewählt bleibt
-    document.querySelector(
-      '#authors [value="' + slectedAuthor + '"]'
-    ).selected = true;
+  document.getElementById("authors").onchange = filterChange;
+
+  document.getElementById("type").onchange = function() {
+    document.getElementById("authors").selectedIndex = 0;
+    runSearch();
   };
+
+  document.getElementById("sort").onchange = filterChange;
+
+  document.getElementById("inTitle").onchange = filterChange;  
 
   document.getElementById("popupCloseButton").onclick = function() {
     //console.log("Close Popup");
     document.getElementById("popup").classList.remove("fadeIn");
   };
+
+  //Passt den main Margin an die Headerheight an
+  window.addEventListener("resize", function() {
+    document.getElementById("main").style.marginTop = document.getElementById("header").offsetHeight + "px";
+  });
 
   //lädt die Favoriten
   loadFavorites();

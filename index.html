@@ -9,21 +9,38 @@
     <body>
     <div id="header">
       <h1>Interface for Google Books API:</h1>
-
-      <label>
+      <button id="showWishListBtn">Favoriten</button>
+      <label for="searchText">
         Suche:
         <input id="searchText" type="search" placeholder="Buchtitel" />
       </label>
       <button id="run">Starten</button>
-      <label id="authorFilter" for="authors">
-        Autoren:
-        <select id="authors"></select>
-      </label>
-      <button id="showWishListBtn">Favoriten</button>
-    </label>
+
+      <span id=filter>
+        <label id="typeFilter" for="type">
+          Art:
+          <select id="type">
+            <option value="books">Bücher</option>
+            <option value="magazines">Magazine</option>
+             <option value="all">Alle</option>
+           </select>
+         </label>
+         <label id="sortFilter" for="sort">
+           Nach Datum sortieren:
+           <input type="checkbox" id="sort"></input>
+        </label>
+         <label id="inTitleFilter" for="inTitle">
+           Im Titel suchen:
+          <input type="checkbox" id="inTitle"></input>
+         </label>
+        <label id="authorFilter" for="authors">
+           Autor:
+           <select id="authors"></select>
+         </label>
+      </span>
     </div>
 
-    <main>
+    <main id="main">
       <div class="popup" id="popup">
         <div class="flex-container">
             <h2 id="popupTitel">Titel</h2>
