@@ -7,35 +7,37 @@
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
-        <div class="popup" id="popup">
-            <div class="flex-container">
-                <h2 id="popupTitel">Titel</h2>
-                <img id="popupImage"></img>
-                <h3>Autoren</h3>
-                <p id="popupAuthors">Autoren</p>
-                <h3>Beschreibung</h3>
-                <p id="popupDescription">Beschreibung</p>
-                <button id="popupCloseButton">X</button>
-            </div>
-        </div>
-
     <div id="header">
-      <h1>Bücher:</h1>
+      <h1>Interface for Google Books API:</h1>
 
       <label>
         Suche:
         <input id="searchText" type="search" placeholder="Buchtitel" />
       </label>
       <button id="run">Starten</button>
-      <label for="authors">
-        Autoren-Filter:
+      <label id="authorFilter" for="authors">
+        Autoren:
         <select id="authors"></select>
       </label>
       <button id="showWishListBtn">Favoriten</button>
+    </label>
     </div>
 
-    <div id="output"></div>
-
+    <main>
+      <div class="popup" id="popup">
+        <div class="flex-container">
+            <h2 id="popupTitel">Titel</h2>
+            <img id="popupImage"></img>
+            <h3>Autoren</h3>
+            <p id="popupAuthors">Autoren</p>
+            <h3>Beschreibung</h3>
+            <p id="popupDescription">Beschreibung</p>
+            <button id="popupCloseButton">X</button>
+        </div>
+      </div>
+      <h2 id="outputLabel">Favoriten</h2>
+      <div id="output"></div>
+    </main>
     <script src="googleBooksAPITest.js"></script>
   </body>
 </html>

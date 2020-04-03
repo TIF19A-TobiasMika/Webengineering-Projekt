@@ -9,46 +9,55 @@ body {
   width: 80vw;
   height: 80vh;
   left: 10vw;
-  top: 10vh;
+  top: 13vh;
   border-radius: 16px;
   border-style: solid;
-  z-index: 1;
-  display: none;
+  z-index: 10;
+  visibility: hidden;
   opacity: 0;
-  transition: opacity 1s;
+  transition: opacity 0.8s;
   overflow: auto;
+}
+
+.fadeIn {
+  visibility: visible;
+  opacity: 0.98;
 }
 
 .popup button {
   position: absolute;
-  top: 5%;
-  left: 95%;
+  top: 22px;
+  left: 98%;
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   color: black;
   font-size: 22px;
-  padding: 4px 7px;
+  padding: 4px 9px;
   border: none;
   cursor: pointer;
   border-radius: 50%;
   text-align: center;
 }
 
-.popup h3{
-    font-weight: bold;
-    font-size: 18px;
-    margin: 5px;
+#showWishListBtn {
+  float: right;
+  margin-right: 3%;
+}
+
+#popupTitel {
+  margin-right: 20px;
+}
+
+.popup h3 {
+  font-weight: bold;
+  font-size: 18px;
+  margin: 5px;
 }
 
 .popup img {
   margin: 10px;
   width: 150px;
   height: 200px;
-}
-
-.fadeIn {
-  display: block;
-  opacity: 0.98;
 }
 
 .container {
@@ -97,10 +106,26 @@ body {
   border-color: gray;
 }
 
+main {
+  margin-top: 120px;
+}
+
+#outputLabel {
+  text-align: center;
+  padding-top: 10px;
+  margin-bottom: 5px;
+  visibility: hidden;
+}
+
+#outputLabel.visible {
+  visibility: visible;
+}
+
 #output {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 label {
@@ -109,16 +134,32 @@ label {
   font-weight: bold;
 }
 
+#authorFilter {
+  visibility: hidden;
+}
+
+#authorFilter.visible {
+  visibility: visible;
+}
+
 #header {
-  padding-bottom: 20px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 110px;
+  background-color: gray;
+  z-index: 2;
+  color: white;
+  padding-left: 1vw;
+  padding-bottom: 1vh;
 }
 
 .flex-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.flex-container p{
-    margin: 5px;
+.flex-container {
+  margin: 8px;
 }

@@ -1,6 +1,6 @@
 let resultMap = new Map();
 let allAuthors = new Set();
-let apiKey = "AIzaSyCg0v6ii17dHIn0ZfQMIfMD0qshWRuFio0"
+let apiKey = "AIzaSyCg0v6ii17dHIn0ZfQMIfMD0qshWRuFio0";
 
 function Book(title, authors, description, thumbnail) {
   this.title = title;
@@ -12,6 +12,7 @@ function Book(title, authors, description, thumbnail) {
 async function searchFor(searchText) {
   resultMap.clear();
   allAuthors.clear();
+  let outputLabel = document.getElementById("outputLabel");
   let authorChoice = document.getElementById("authors");
   let authorFilter =
     authorChoice.selectedIndex === -1
@@ -25,9 +26,18 @@ async function searchFor(searchText) {
   }
   const fetchResult = await fetch(fetchRequest);
   let json = await fetchResult.json();
-  json.items.forEach(parseVolume);
-  createOutput();
-  createAuthorChoice();
+  console.log(json);
+  if (json.totalItems > 0) {
+    outputLabel.classList.remove("visible");
+    json.items.forEach(parseVolume);
+    createOutput();
+    createAuthorChoice();
+  } else {
+    outputLabel.innerText = `Kein Treffer für "${searchText}" gefunden`;
+    outputLabel.classList.add("visible");
+    document.getElementById("authorFilter").classList.remove("visible");
+    document.getElementById("output").innerHTML = "";
+  }
 }
 
 function parseVolume(val) {
@@ -65,6 +75,7 @@ function createAuthorChoice() {
     opt.value = author;
     authorChoice.appendChild(opt);
   });
+  document.getElementById("authorFilter").classList.add("visible");
 }
 
 function removeFavorite(id) {
@@ -91,7 +102,7 @@ function getFavorites() {
 }
 
 function createOutput() {
-  console.log("creating Output");
+  //console.log("creating Output");
   let output = document.getElementById("output");
   output.innerHTML = "";
   let favorites = getFavorites();
@@ -102,7 +113,10 @@ function createOutput() {
     let favoriteButton = document.createElement("BUTTON");
     favoriteButton.setAttribute("class", "wishlistBtn");
     if (favorites.includes(key)) {
+      favoriteButton.setAttribute("title", "Aus Favoriten entfernen");
       favoriteButton.classList.add("checked");
+    } else {
+      favoriteButton.setAttribute("title", "Zu Favoriten himzufügen");
     }
     favoriteButton.innerHTML = "\u2606";
     favoriteButton.onclick = function() {
@@ -128,7 +142,7 @@ function createOutput() {
       let authorPopUpList = document.getElementById("popupAuthors");
       authorPopUpList.innerHTML = "";
       authorPopUpList.appendChild(GenerateAuthorList(b));
-      let descriptionPopUpList = document.getElementById("popupDescription")
+      let descriptionPopUpList = document.getElementById("popupDescription");
       descriptionPopUpList.innerHTML = "";
       descriptionPopUpList.appendChild(GenerateDescription(b));
       document.getElementById("popup").classList.add("fadeIn");
@@ -139,13 +153,11 @@ function createOutput() {
   }
 }
 
-function GenerateAuthorList(book){
+function GenerateAuthorList(book) {
   let authorList = document.createElement("p");
-  if(book.authors !== undefined)
-  {
-    for (let i = 0; i < book.authors.length; i++) 
-    {
-      let listItem = document.createElement('p');
+  if (book.authors !== undefined) {
+    for (let i = 0; i < book.authors.length; i++) {
+      let listItem = document.createElement("p");
       listItem.textContent = book.authors[i];
       authorList.appendChild(listItem);
     }
@@ -153,53 +165,74 @@ function GenerateAuthorList(book){
   return authorList;
 }
 
-function GenerateDescription(book)
-{
+function GenerateDescription(book) {
   let description = document.createElement("p");
   description.setAttribute("class", "popUpDescriptionText");
 
-  if(book.description !== undefined)
-  {
+  if (book.description !== undefined) {
     description.textContent = book.description;
   }
   return description;
 }
 
-document.addEventListener('DOMContentLoaded', function(){
-    document.getElementById('run').onclick = async function(){
-      let searchText = document.getElementById("searchText").value;
-      searchText = searchText.replace(/ /g, '+');
-      searchFor(searchText);
-    };
-    
+async function loadFavorites() {
+  console.log("Lade Favoriten...");
+  document.getElementById("authorFilter").classList.remove("visible");
+  let favorites = getFavorites();
+  let outputLabel = document.getElementById("outputLabel");
+  outputLabel.classList.add("visible");
+  if (favorites.length <= 0) {
+    outputLabel.innerText = "Keine Favoriten gespeichert";
+  } else {
+    outputLabel.innerText = "Favoriten";
+    resultMap.clear();
+    allAuthors.clear();
+    await Promise.all(
+      favorites.map(async function(fav) {
+        const fetchResult = await fetch(
+          `https://www.googleapis.com/books/v1/volumes/${fav}?key=${apiKey}`
+        );
+        let json = await fetchResult.json();
+        parseVolume(json);
+      })
+    );
+    //createAuthorChoice();
+    createOutput();
+  }
+}
 
-    document.getElementById("popupCloseButton").onclick = function() {
-      console.log("Close Popup");
-      document.getElementById("popup").classList.remove("fadeIn");
-    };
+async function runSearch() {
+  let searchText = document.getElementById("searchText").value;
+  searchText = searchText.replace(/ /g, "+");
+  await searchFor(searchText);
+  console.log("searched for " + searchText);
+}
 
-    document.getElementById('showWishListBtn').onclick = async function() {
-      console.log("Lade Favoriten...")
-      let favorites = getFavorites();
-      if(favorites.length <= 0) {
-        alert("Noch keine Favoriten gespeichert");
-      } else {
-        resultMap.clear();
-        allAuthors.clear();
-        await Promise.all(favorites.map(async function(fav) {
-          const fetchResult = await fetch(`https://www.googleapis.com/books/v1/volumes/${fav}?key=${apiKey}`);
-          let json = await fetchResult.json();
-          parseVolume(json);
-        }));
-        createAuthorChoice();
-        createOutput();
-      }
-    };
+document.addEventListener("DOMContentLoaded", function() {
+  document.getElementById("run").onclick = runSearch;
 
-
+  document.getElementById("searchText").onsearch = runSearch;
 
   document.getElementById("popupCloseButton").onclick = function() {
     console.log("Close Popup");
     document.getElementById("popup").classList.remove("fadeIn");
   };
+
+  document.getElementById("showWishListBtn").onclick = loadFavorites;
+
+  document.getElementById("authors").onchange = async function() {
+    let authorChoice = document.getElementById("authors");
+    let slectedAuthor = authorChoice.value;
+    await runSearch();
+    document.querySelector(
+      '#authors [value="' + slectedAuthor + '"]'
+    ).selected = true;
+  };
+
+  document.getElementById("popupCloseButton").onclick = function() {
+    console.log("Close Popup");
+    document.getElementById("popup").classList.remove("fadeIn");
+  };
+
+  loadFavorites();
 });
